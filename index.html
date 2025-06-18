@@ -128,30 +128,19 @@
 
               // Only send the event once, unsubscribe after the event is sent.
               subscription.unsubscribe();
-              try {
-  if (typeof g_form !== 'undefined') {
-    const numberValue = g_form.getValue('number');
-    console.log('Ticket number:', numberValue);
+              window.addEventListener('message', event => {
+  if (event.data.type === 'ServiceNowFieldData') {
+    const { number } = event.data;
+    console.log('Received number from parent:', number);
 
-    // Optional: send it as a message to the bot
+    // Optional: send to bot
     directLine.postActivity({
       type: 'message',
       from: { id: 'user' },
-      text: `Your ticket number is ${numberValue}`
+      text: `Your ticket number is ${number}`
     }).subscribe();
-  } else {
-    console.warn('g_form is not available in this context.');
   }
-} catch (error) {
-  console.error('Error retrieving ticket number:', error);
-}
-
-            }
-          }
-        });
-
-        WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
-      })();
+});
     </script>
   </body>
 </html>
