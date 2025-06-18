@@ -128,6 +128,24 @@
 
               // Only send the event once, unsubscribe after the event is sent.
               subscription.unsubscribe();
+              try {
+  if (typeof g_form !== 'undefined') {
+    const numberValue = g_form.getValue('number');
+    console.log('Ticket number:', numberValue);
+
+    // Optional: send it as a message to the bot
+    directLine.postActivity({
+      type: 'message',
+      from: { id: 'user' },
+      text: `Your ticket number is ${numberValue}`
+    }).subscribe();
+  } else {
+    console.warn('g_form is not available in this context.');
+  }
+} catch (error) {
+  console.error('Error retrieving ticket number:', error);
+}
+
             }
           }
         });
