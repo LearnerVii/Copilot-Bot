@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Copilot Chatbot</title>
+    <style>
+      html, body { height: 100%; margin: 0; }
+      #webchat { height: 100%; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="webchat"></div>
+
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    <script>
+      (async function () {
+        const styleOptions = { hideUploadButton: true };
+
+        const tokenEndpointURL = new URL('https://63a19b401f49eab29355b239dd57f5.0f.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crf50_agent/directline/token?api-version=2022-03-01-preview');
+        const apiVersion = tokenEndpointURL.searchParams.get('api-version');
+        const locale = 'en';
+
+        const [directLineURL, token] = await Promise.all([
+          fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL)).then(res => res.json()).then(data => data.channelUrlsById.directline),
+          fetch(tokenEndpointURL).then(res => res.json()).then(data => data.token)
+        ]);
+
+        const directLine = WebChat.createDirectLine({
+          domain: new URL('v3/directline', directLineURL),
+          token
+        });
+
+        // Listen for ServiceNow field via postMessage
+        window.addEventListener('message', (event) => {
+          if (event.data.type === 'ServiceNowFieldData') {
+            const number = event.data.number;
+            directLine.postActivity({
+              type: 'message',
+              from: { id: 'user' },
+              text: `Your ServiceNow number is ${number}`
+            }).subscribe();
+          }
+        });
+
+        WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
+      })();
+    </script>
+  </body>
+</html>
