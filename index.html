@@ -128,19 +128,7 @@
 
               // Only send the event once, unsubscribe after the event is sent.
               subscription.unsubscribe();
-              window.addEventListener('message', event => {
-  if (event.data.type === 'ServiceNowFieldData') {
-    const { number } = event.data;
-    console.log('Received number from parent:', number);
-
-    // Optional: send to bot
-    directLine.postActivity({
-      type: 'message',
-      from: { id: 'user' },
-      text: `Your ticket number is ${number}`
-    }).subscribe();
-  }
-});
+              
     </script>
   </body>
 </html>
