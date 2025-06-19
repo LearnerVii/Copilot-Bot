@@ -68,7 +68,7 @@
 
         // Specifies the token endpoint for your agent
         // To get this value, go to the Channels page for your agent in Copilot Studio, and open the Email config panel
-        const tokenEndpointURL = new URL('https://63a19b401f49eab29355b239dd57f5.0f.environment.api.powerplatform.com/powervirtualagents/botsbyschema/crf50_agent/directline/token?api-version=2022-03-01-preview');
+        const tokenEndpointURL = new URL('https://63a19b401f49eab29355b239dd57f5.0f.environment.api.powerplatform.com/powervirtualagents/botsbyschema/new_agent1/directline/token?api-version=2022-03-01-preview');
 
         // Specifies the language the agent and Web Chat should display in:
         // - (Recommended) To match the page language, set it to document.documentElement.lang
@@ -128,7 +128,12 @@
 
               // Only send the event once, unsubscribe after the event is sent.
               subscription.unsubscribe();
-              
+            }
+          }
+        });
+
+        WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
+      })();
     </script>
   </body>
 </html>
