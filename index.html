@@ -134,6 +134,18 @@
 
         WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
       })();
+      window.addEventListener("message", function (event) {
+  if (event.data && event.data.type === "IncidentSysId") {
+    const sysId = event.data.sys_id;
+
+    directLine.postActivity({
+      type: "message",
+      from: { id: "user" },
+      text: `Fetch incident ${sysId}`
+    }).subscribe();
+  }
+});
+
     </script>
   </body>
 </html>
