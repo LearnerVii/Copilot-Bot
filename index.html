@@ -117,14 +117,20 @@
         const subscription = directLine.connectionStatus$.subscribe({
           next(value) {
             if (value === 2) {
-              directLine
-                .postActivity({
-                  localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                  locale,
-                  name: 'startConversation',
-                  type: 'event'
-                })
-                .subscribe();
+              //const pageUrl = window.location.href;
+
+directLine.postActivity({
+  type: 'event',
+  name: 'startConversation',
+  locale,
+  localTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  value: {
+    pageUrl: window.location.href
+  }
+}).subscribe();
+
+
+
 
               // Only send the event once, unsubscribe after the event is sent.
               subscription.unsubscribe();
@@ -134,17 +140,7 @@
 
         WebChat.renderWebChat({ directLine, locale, styleOptions }, document.getElementById('webchat'));
       })();
-      window.addEventListener("message", function (event) {
-  if (event.data && event.data.type === "IncidentSysId") {
-    const sysId = event.data.sys_id;
-
-    directLine.postActivity({
-      type: "message",
-      from: { id: "user" },
-      text: `Fetch incident ${sysId}`
-    }).subscribe();
-  }
-});
+     
 
     </script>
   </body>
